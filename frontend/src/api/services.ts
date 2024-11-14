@@ -7,7 +7,7 @@ export interface CriarPixParams {
   number: string
 }
 
-export const criaPix = async (params: CriarPixParams) => {
+export const createPix = async (params: CriarPixParams) => {
   const response = await fetch("http://localhost:3000/criar-pix", {
     method: "POST",
     headers: {

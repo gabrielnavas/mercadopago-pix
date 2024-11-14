@@ -1,9 +1,11 @@
+import express from 'express'
+
 // Step 1: Import the parts of the module you want to use
-const { MercadoPagoConfig, Payment } = require('mercadopago');
+import { MercadoPagoConfig, Payment } from 'mercadopago'
 
 // Step 2: Initialize the client object
 const client = new MercadoPagoConfig({
-  accessToken: process.env.access_token,
+  accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN as string,
   options: {
     timeout: 5000,
     idempotencyKey: 'abc'
@@ -13,8 +15,6 @@ const client = new MercadoPagoConfig({
 // Step 3: Initialize the API object
 const payment = new Payment(client);
 
-
-var express = require('express');
 var router = express.Router();
 
 const MOCK_PIX = {
@@ -144,45 +144,36 @@ const MOCK_PIX = {
   },
 }
 
-/* GET home page. */
-router.get('/', function (req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
-router.post('/criar-pix', function (req, res, next) {
+router.post('/criar-pix', async (req, res, next) => {
   console.log('REQUEST');
   console.log(req.body);
 
-  // const body = {
-  //   transaction_amount: req.body.transaction_amount,
-  //   description: req.body.description,
-  //   payment_method_id: req.body.paymentMethodId,
-  //   payer: {
-  //     email: req.body.email,
-  //     identification: {
-  //       type: req.body.identificationType,
-  //       number: req.body.number
-  //     }
-  //   }
-  // }
+  console.log(process.env.MERCADOPAGO_ACCESS_TOKEN);
 
-  // const requestOptions = {
-  //   idempotencyKey: '<IDEMPOTENCY_KEY>',
-  // };
+  const requestOptions = {
+    idempotencyKey: '<IDEMPOTENCY_KEY>',
+  };
 
-  // payment.create({ body, requestOptions })
-  //   .then((result) => {
-  //     console.log('result payment')
-  //     console.log(result)
-  //   })
-  //   .catch(err => {
-  //     console.log('erro payment')
-  //     console.log(err)
-  //   });
-
-  res.status(201).json(MOCK_PIX).end()
+  try {
+    const result = await payment.create({
+      body: {
+        transaction_amount: req.body.transaction_amount,
+        description: req.body.description,
+        payment_method_id: req.body.paymentMethodId,
+        payer: {
+          email: req.body.email,
+          identification: {
+            type: req.body.identificationType,
+            number: req.body.number
+          }
+        }
+      }, requestOptions
+    })
+    res.status(201).json(result).end()
+  } catch (err) {
+    console.log('erro payment')
+    console.log(err)
+  }
 });
 
-
-
-module.exports = router;
+export default router

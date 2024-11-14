@@ -1,12 +1,14 @@
+import { useState } from 'react';
+
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { criaPix } from '../api/services';
-import { useState } from 'react';
 import { Box } from '@mui/material';
+
+import { createPix } from '../api/services';
 
 export default function TicketPix() {
   const [qrCodeBase64, setQrCodeBase64] = useState('')
@@ -16,13 +18,13 @@ export default function TicketPix() {
     transaction_amount: 2.00,
     description: "Big Mac",
     paymentMethodId: "pix",
-    email: "gabrielnavas@email.com",
+    email: "gabrielnavas@protonmail.com",
     identificationType: "CPF",
     number: "397.698.800-60"
   }
 
   const onClickPagarComPix = async () => {
-    const data = await criaPix(MOCK_BODY)
+    const data = await createPix(MOCK_BODY)
     setQrCodeBase64(data.point_of_interaction.transaction_data.qr_code_base64)
     setTicketUrl(data.point_of_interaction.transaction_data.ticket_url)
     console.log(data);

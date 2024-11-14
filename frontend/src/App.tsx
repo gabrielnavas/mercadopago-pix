@@ -1,11 +1,14 @@
 import { Box } from '@mui/material'
-import TicketPix from './pagamentos/TicketPix'
+import TicketPix from './payments/TicketPix'
 
 function App() {
-
   return (
-    <Box display='flex' justifyContent='center' alignItems='center' height='100vh'>
-     <TicketPix />
+    <Box
+      display='flex'
+      justifyContent='center'
+      alignItems='center'
+      height='100vh'>
+      <TicketPix />
     </Box>
   )
 }
